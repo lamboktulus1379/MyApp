@@ -1,0 +1,3 @@
+CREATE DATABASE myapp;
+GO
+USE myapp;
