@@ -5,6 +5,6 @@ namespace Enjoyer.Core.Models
 {
     public class ApplicationUserForRoles
     {
-        public ICollection<Guid> Roles { get; set; }
+        public ICollection<Guid> ApplicationRoles { get; set; }
     }
 }

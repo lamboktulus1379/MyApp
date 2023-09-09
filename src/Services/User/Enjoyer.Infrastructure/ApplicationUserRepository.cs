@@ -30,21 +30,21 @@ namespace Enjoyer.Infrastructure
         {
             ApplicationUser applicationUser = GetApplicationUserAndRolesByEmail(email);
 
-            foreach (var role in applicationUser.Roles.ToList())
+            foreach (var role in applicationUser.ApplicationRoles.ToList())
             {
-                if (!applicationUserForRoles.Roles.Contains(role.Id))
+                if (!applicationUserForRoles.ApplicationRoles.Contains(role.Id))
                 {
-                    applicationUser.Roles.Remove(role);
+                    applicationUser.ApplicationRoles.Remove(role);
                 }
             }
 
-            foreach (var role in applicationUserForRoles.Roles)
+            foreach (var role in applicationUserForRoles.ApplicationRoles)
             {
-                if (!applicationUser.Roles.Any(r => r.Id == role))
+                if (!applicationUser.ApplicationRoles.Any(r => r.Id == role))
                 {
-                    var newRole = new Role { Id = role };
-                    _applicationUserContext.Roles.Attach(newRole);
-                    applicationUser.Roles.Add(newRole);
+                    var newRole = new ApplicationRole { Id = role };
+                    _applicationUserContext.ApplicationRoles.Attach(newRole);
+                    applicationUser.ApplicationRoles.Add(newRole);
                 }
             }
             _applicationUserContext.SaveChanges();
@@ -100,12 +100,12 @@ namespace Enjoyer.Infrastructure
 
         public ApplicationUser GetApplicationUserAndRolesByEmail(string email)
         {
-            return _applicationUserContext.ApplicationUsers.Include(u => u.Roles).Where(applicationUser => applicationUser.Email.Equals(email)).FirstOrDefault();
+            return _applicationUserContext.ApplicationUsers.Include(u => u.ApplicationRoles).Where(applicationUser => applicationUser.Email.Equals(email)).FirstOrDefault();
         }
 
         public ApplicationUser GetApplicationUserAndRolesByEmailAndPassword(string email, string password)
         {
-            return _applicationUserContext.ApplicationUsers.Include(u => u.Roles).Where(applicationUser => applicationUser.Email.Equals(email) && applicationUser.Password.Equals(password)).FirstOrDefault();
+            return _applicationUserContext.ApplicationUsers.Include(u => u.ApplicationRoles).Where(applicationUser => applicationUser.Email.Equals(email) && applicationUser.Password.Equals(password)).FirstOrDefault();
 
         }
     }

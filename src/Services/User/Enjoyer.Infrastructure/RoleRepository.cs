@@ -5,48 +5,48 @@ using Enjoyer.Infrastructure.Data;
 
 namespace Enjoyer.Infrastructure
 {
-    public class RoleRepository : IRoleRepository
+    public class ApplicationRoleRepository : IApplicationRoleRepository
     {
         private readonly ApplicationUserContext _applicationUserContext;
         private readonly IMapper _mapper;
 
-        public RoleRepository(ApplicationUserContext roleContext, IMapper mapper)
+        public ApplicationRoleRepository(ApplicationUserContext roleContext, IMapper mapper)
         {
             _applicationUserContext = roleContext;
             _mapper = mapper;
         }
-        public Role Add(Role newRole)
+        public ApplicationRole Add(ApplicationRole newApplicationRole)
         {
-            _applicationUserContext.Roles.Add(newRole);
+            _applicationUserContext.ApplicationRoles.Add(newApplicationRole);
             _applicationUserContext.SaveChanges();
 
-            return _applicationUserContext.Roles.Find(newRole.Id);
+            return _applicationUserContext.ApplicationRoles.Find(newApplicationRole.Id);
         }
 
         public void Delete(Guid id)
         {
-            var existingApplicationuser = _applicationUserContext.Roles.Find(id);
-            _applicationUserContext.Roles.Remove(existingApplicationuser);
+            var existingApplicationuser = _applicationUserContext.ApplicationRoles.Find(id);
+            _applicationUserContext.ApplicationRoles.Remove(existingApplicationuser);
         }
 
-        public IEnumerable<Role> GetRoles()
+        public IEnumerable<ApplicationRole> GetApplicationRoles()
         {
-            return _applicationUserContext.Roles.ToList();
+            return _applicationUserContext.ApplicationRoles.ToList();
         }
 
-        public Role GetById(Guid Id)
+        public ApplicationRole GetById(Guid Id)
         {
-            return _applicationUserContext.Roles.Where(role => role.Id.Equals(Id)).FirstOrDefault();
+            return _applicationUserContext.ApplicationRoles.Where(role => role.Id.Equals(Id)).FirstOrDefault();
         }
 
-        public Role Update(Guid Id, Role newRole)
+        public ApplicationRole Update(Guid Id, ApplicationRole newApplicationRole)
         {
-            var role = _applicationUserContext.Roles.Where(r => r.Id.Equals(Id)).FirstOrDefault<Role>();
+            var role = _applicationUserContext.ApplicationRoles.Where(r => r.Id.Equals(Id)).FirstOrDefault<ApplicationRole>();
 
             if (role != null)
             {
-                role.Name = newRole.Name;
-                role.Status = newRole.Status;
+                role.Name = newApplicationRole.Name;
+                role.Status = newApplicationRole.Status;
                 role.UpdatedAt = DateTime.Now;
 
                 _applicationUserContext.SaveChanges();
@@ -55,9 +55,9 @@ namespace Enjoyer.Infrastructure
             return role;
         }
 
-        public Role GetByName(string Name)
+        public ApplicationRole GetByName(string Name)
         {
-            return _applicationUserContext.Roles.FirstOrDefault(r => r.Name.Equals(Name));
+            return _applicationUserContext.ApplicationRoles.FirstOrDefault(r => r.Name.Equals(Name));
         }
     }
 }

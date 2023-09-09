@@ -34,7 +34,7 @@ namespace Enjoyer.Infrastructure.Migrations
 
                     b.HasIndex("RolesId");
 
-                    b.ToTable("ApplicationUserRole");
+                    b.ToTable("ApplicationUserRole", (string)null);
                 });
 
             modelBuilder.Entity("Enjoyer.Core.Models.ApplicationUser", b =>
@@ -74,7 +74,7 @@ namespace Enjoyer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationUsers");
+                    b.ToTable("ApplicationUsers", (string)null);
                 });
 
             modelBuilder.Entity("Enjoyer.Core.Models.Role", b =>
@@ -98,7 +98,7 @@ namespace Enjoyer.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

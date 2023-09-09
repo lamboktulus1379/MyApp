@@ -14,6 +14,8 @@ namespace Enjoyer.Core.Models
         public DateTime RefreshTokenExpiry { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public Double Balance { get; set; }
+        public double Balance { get; set; }
+        public ICollection<Role> Roles { get; set; }
     }
+
 }

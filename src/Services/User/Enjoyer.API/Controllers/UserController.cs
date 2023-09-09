@@ -19,12 +19,12 @@ namespace Enjoyer.API.Controllers
     {
         private readonly IApplicationUserRepository _applicationUserService;
         private readonly IUserRepository _userService;
-        private readonly IRoleRepository _roleService;
+        private readonly IApplicationRoleRepository _roleService;
         private readonly UserManager<User> _userManager;
         private IMapper _mapper;
         private readonly ILoggerManager _logger;
 
-        public UserController(IApplicationUserRepository service, IRoleRepository roleService, IMapper mapper, UserManager<User> userManager, IUserRepository userService, ILoggerManager logger)
+        public UserController(IApplicationUserRepository service, IApplicationRoleRepository roleService, IMapper mapper, UserManager<User> userManager, IUserRepository userService, ILoggerManager logger)
         {
             _applicationUserService = service;
             _roleService = roleService;
@@ -32,10 +32,6 @@ namespace Enjoyer.API.Controllers
             _userManager = userManager;
             _userService = userService;
             _logger = logger;
-        }
-
-        public UserController()
-        {
         }
 
         [HttpGet("/all")]

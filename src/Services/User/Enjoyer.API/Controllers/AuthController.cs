@@ -21,14 +21,14 @@ namespace Enjoyer.API.Controllers
     {
         private readonly IUserRepository _userService;
         private readonly IApplicationUserRepository _applicationUserService;
-        private readonly IRoleRepository _roleService;
+        private readonly IApplicationRoleRepository _roleService;
         private readonly IHashing _hashing;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly UserManager<User> _userManager;
         private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IApplicationUserRepository applicationUserService, IUserRepository userService, ITokenService tokenService, IMapper mapper, IRoleRepository roleService, IHashing hashing, UserManager<User> userManager, ILogger<AuthController> logger)
+        public AuthController(IApplicationUserRepository applicationUserService, IUserRepository userService, ITokenService tokenService, IMapper mapper, IApplicationRoleRepository roleService, IHashing hashing, UserManager<User> userManager, ILogger<AuthController> logger)
         {
             _userService = userService;
             _tokenService = tokenService;
@@ -85,7 +85,7 @@ namespace Enjoyer.API.Controllers
                 new Claim(ClaimTypes.Email, dbUser.Email)
             };
 
-            foreach (var role in applicationUser.Roles)
+            foreach (var role in applicationUser.ApplicationRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role.Name));
             }
@@ -141,13 +141,13 @@ namespace Enjoyer.API.Controllers
             user.Password = _hashing.Generate(user.Password);
 
             var userEntity = _mapper.Map<ApplicationUser>(user);
-            Role role = _roleService.GetByName("User");
+            ApplicationRole role = _roleService.GetByName("User");
 
             if (role != null)
             {
-                List<Role> roles = new List<Role>();
+                List<ApplicationRole> roles = new List<ApplicationRole>();
                 roles.Add(role);
-                userEntity.Roles = roles;
+                userEntity.ApplicationRoles = roles;
             }
             _applicationUserService.Add(userEntity);
 

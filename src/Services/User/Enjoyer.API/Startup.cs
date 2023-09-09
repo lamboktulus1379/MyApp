@@ -95,7 +95,7 @@ namespace Enjoyer.API
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
-            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IApplicationRoleRepository, ApplicationRoleRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -105,8 +105,6 @@ namespace Enjoyer.API
             services.AddScoped<ITokenService, TokenService>();
             services.AddTransient<IHashing, HashingService>();
             services.AddSingleton<ILoggerManager, LoggerManager>();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

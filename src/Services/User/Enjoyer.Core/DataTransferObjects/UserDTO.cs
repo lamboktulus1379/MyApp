@@ -1,4 +1,6 @@
-﻿namespace Enjoyer.Core.DataTransferObjects
+﻿using Enjoyer.Core.Models;
+
+namespace Enjoyer.Core.DataTransferObjects
 {
     public class UserDto
     {
@@ -11,6 +13,8 @@
         public string NormalizedEmail { get; set; }
         public string NormalizedUserName { get; set; }
         public string CreatedAt { get; set; }
+
+        public IEnumerable<Role> Roles { get; set; }
 
         public UserDto()
         {

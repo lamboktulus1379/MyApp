@@ -11,10 +11,10 @@ namespace Enjoyer.API.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly IRoleRepository _roleService;
+        private readonly IApplicationRoleRepository _roleService;
         private IMapper _mapper;
 
-        public RoleController(IRoleRepository service, IMapper mapper)
+        public RoleController(IApplicationRoleRepository service, IMapper mapper)
         {
             _roleService = service;
             _mapper = mapper;
@@ -23,13 +23,13 @@ namespace Enjoyer.API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Role>> GetRoles()
         {
-            var roles = _roleService.GetRoles();
+            var roles = _roleService.GetApplicationRoles();
 
             return Ok(roles);
         }
 
         [HttpGet("{id}", Name = "Get")]
-        public ActionResult<Role> Get(Guid id)
+        public ActionResult<ApplicationRole> Get(Guid id)
         {
             var role = _roleService.GetById(id);
 
@@ -57,7 +57,7 @@ namespace Enjoyer.API.Controllers
                 return Conflict(roleByName);
             }
 
-            var roleEntity = _mapper.Map<Role>(roleRequest);
+            var roleEntity = _mapper.Map<ApplicationRole>(roleRequest);
 
             var role = _roleService.Add(roleEntity);
 
@@ -74,7 +74,7 @@ namespace Enjoyer.API.Controllers
                 return NotFound();
             }
 
-            var roleEntity = _mapper.Map<Role>(roleForUpdate);
+            var roleEntity = _mapper.Map<ApplicationRole>(roleForUpdate);
 
             var role = _roleService.Update(id, roleEntity);
             return Ok(role);

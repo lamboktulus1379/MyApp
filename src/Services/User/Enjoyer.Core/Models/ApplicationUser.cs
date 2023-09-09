@@ -13,6 +13,6 @@ namespace Enjoyer.Core.Models
         public DateTime DateOfBirth { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
-        public ICollection<Role>? Roles { get; set; }
+        public ICollection<ApplicationRole>? ApplicationRoles { get; set; }
     }
 }

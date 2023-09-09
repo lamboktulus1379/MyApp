@@ -2,14 +2,14 @@
 
 namespace Enjoyer.Core.Interfaces
 {
-    public interface IRoleRepository
+    public interface IApplicationRoleRepository
     {
-        IEnumerable<Role> GetRoles();
-        Role Add(Role newRole);
-        Role GetById(Guid Id);
+        IEnumerable<ApplicationRole> GetApplicationRoles();
+        ApplicationRole Add(ApplicationRole newApplicationRole);
+        ApplicationRole GetById(Guid Id);
 
-        Role GetByName(string Name);
-        Role Update(Guid Id, Role newRole);
+        ApplicationRole GetByName(string Name);
+        ApplicationRole Update(Guid Id, ApplicationRole newRole);
         void Delete(Guid id);
     }
 }

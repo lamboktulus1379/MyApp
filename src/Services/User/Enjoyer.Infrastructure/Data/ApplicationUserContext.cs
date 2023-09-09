@@ -1,5 +1,6 @@
 ﻿using Enjoyer.Core.Models;
 using Enjoyer.Infrastructure.Entities.Configuration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,14 +11,13 @@ namespace Enjoyer.Infrastructure.Data
     {
         public ApplicationUserContext()
         {
-            
         }
         public ApplicationUserContext(DbContextOptions options) : base(options)
         { }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<Role> Roles { get; set; }
-
+        public DbSet<ApplicationRole> ApplicationRoles { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

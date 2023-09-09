@@ -36,7 +36,8 @@ namespace Enjoyer.Infrastructure
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            return await _applicationUserContext.Users.ToListAsync();
+            return await _applicationUserContext.Users
+            .ToListAsync();
         }
 
         public User GetById(string Id)
