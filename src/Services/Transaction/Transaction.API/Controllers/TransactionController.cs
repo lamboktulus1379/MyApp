@@ -1,8 +1,7 @@
-using EventBusKafka;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Transaction.Core.DataTransferObjects;
 using Transaction.Infrastructure.Data;
+using Transaction.Usecase.TransactionUsecase;
 
 namespace Transaction.API;
 
@@ -11,9 +10,11 @@ namespace Transaction.API;
 public class TransactionController : ControllerBase
 {
     private readonly RepositoryContext _context;
-    public TransactionController(RepositoryContext context)
+    private readonly ITransactionUsecase _transactionUsecase;
+    public TransactionController(RepositoryContext context, ITransactionUsecase transactionUsecase)
     {
         _context = context;
+        _transactionUsecase = transactionUsecase;
     }
 
     // POST: api/Transactions
@@ -22,6 +23,11 @@ public class TransactionController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TransactionDTO>> PostTransaction(TransactionDTO transactionDTO)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
         var transaction = new Transaction.Core.TransactionAggregate.Transaction
         {
             Amount = transactionDTO.Amount,
@@ -32,41 +38,7 @@ public class TransactionController : ControllerBase
             Status = 0,
         };
 
-        _context.Transactions.Add(transaction);
-        await _context.SaveChangesAsync();
-
-        // Created = 0
-        // Pending = 1
-        // Success = 2
-        // Failed = 3
-
-
-        UserBalanceForCreation userBalanceForCreation = new UserBalanceForCreation
-        {
-            UserId = transaction.UserId,
-            TransactionId = transaction.Id,
-            TransactionType = 1,
-            Amount = transaction.Amount,
-            CreatedAt = transaction.CreatedAt,
-            UpdatedAt = transaction.UpdatedAt,
-        };
-
-        if (transaction.Status == 1)
-        {
-            userBalanceForCreation.TransactionType = 1;
-        }
-        else if (transaction.Status == 2)
-        {
-            userBalanceForCreation.TransactionType = 2;
-        }
-        else if (transaction.Status == 3)
-        {
-            userBalanceForCreation.TransactionType = 3;
-        }
-
-        string userBalanceForCreationByte = JsonConvert.SerializeObject(userBalanceForCreation);
-        await PushToKafkaAsync(userBalanceForCreationByte);
-
+        var response = _transactionUsecase.DoTransaction(transaction);
 
         return CreatedAtAction(
             nameof(GetTransaction),
@@ -98,9 +70,4 @@ public class TransactionController : ControllerBase
            SupplierId = transaction.SupplierId,
            UserId = transaction.UserId,
        };
-
-    private async Task PushToKafkaAsync(string message)
-    {
-        await Producer.Produce(message);
-    }
 }

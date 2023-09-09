@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-preview.7.23375.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0-preview.7.23375.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Transaction.Infrastructure\Transaction.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\..\BuildingBlocks\EventBus\EventBusKafka\EventBusKafka.csproj" />
+    <ProjectReference Include="..\Transaction.Usecase\Transaction.Usecase.csproj" />
   </ItemGroup>
 
 </Project>
