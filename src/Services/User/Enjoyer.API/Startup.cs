@@ -6,6 +6,7 @@ using Enjoyer.Core.Models;
 using Enjoyer.Core.Services;
 using Enjoyer.Infrastructure;
 using Enjoyer.Infrastructure.Data;
+using Enjoyer.Usecase.UserUsecase;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -105,6 +106,7 @@ namespace Enjoyer.API
             services.AddScoped<ITokenService, TokenService>();
             services.AddTransient<IHashing, HashingService>();
             services.AddSingleton<ILoggerManager, LoggerManager>();
+            services.AddScoped<IUserUsecase, UserUsecase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

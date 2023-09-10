@@ -2,11 +2,8 @@ using Microsoft.Extensions.Configuration;
 using Transaction.Core.Contracts;
 using Transaction.Infrastructure.Host.UserClient.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Text.Json;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 
 namespace Transaction.Infrastructure.UserClient;
@@ -15,11 +12,13 @@ public class UserClient : IUserClient
 {
     public IConfiguration Configuration;
     private readonly IHttpHost _host;
+    private readonly ILogger<UserClient> _logger;
 
-    public UserClient(IConfiguration configuration, IHttpHost host)
+    public UserClient(IConfiguration configuration, IHttpHost host, ILogger<UserClient> logger)
     {
         Configuration = configuration;
         _host = host;
+        _logger = logger;
     }
     public async Task<UserCTO> GetUser(string Id)
     {
@@ -48,6 +47,9 @@ public class UserClient : IUserClient
 
             }
         }
+
+        _logger.LogInformation($"User {content}");
+
         var userResponse = JsonConvert.DeserializeObject<UserCTO>(content);
 
         return userResponse;

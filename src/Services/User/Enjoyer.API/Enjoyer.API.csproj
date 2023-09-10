@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Enjoyer.Core\Enjoyer.Core.csproj" />
     <ProjectReference Include="..\Enjoyer.Infrastructure\Enjoyer.Infrastructure.csproj" />
+    <ProjectReference Include="..\Enjoyer.Usecase\Enjoyer.Usecase.csproj" />
   </ItemGroup>
 
 

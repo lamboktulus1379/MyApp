@@ -2,6 +2,7 @@ using System.Text.Json;
 using AutoMapper;
 using Azure;
 using EventBusKafka;
+using Microsoft.Extensions.Logging;
 using Transaction.Core.DataTransferObjects;
 using Transaction.Infrastructure.Data;
 using Transaction.Infrastructure.UserClient;
@@ -15,12 +16,15 @@ public class TransactionUsecase : ITransactionUsecase
     private readonly RepositoryContext _context;
     private readonly IMapper _mapper;
     private readonly IUserClient _userClient;
+    private readonly ILogger<TransactionUsecase> _logger;
 
-    public TransactionUsecase(RepositoryContext context, IMapper mapper, IUserClient userClient)
+
+    public TransactionUsecase(RepositoryContext context, IMapper mapper, IUserClient userClient, ILogger<TransactionUsecase> logger)
     {
         _context = context;
         _mapper = mapper;
         _userClient = userClient;
+        _logger = logger;
     }
     public async Task<Res> DoTransaction(Core.TransactionAggregate.Transaction transaction)
     {
@@ -30,48 +34,63 @@ public class TransactionUsecase : ITransactionUsecase
             ResponseMessage = "OK",
             ResponseCode = "200",
         };
-
+        string userStr = JsonSerializer.Serialize(user);
+        _logger.LogInformation("User: " + userStr, userStr);
         if (user.Balance < transaction.Amount)
         {
             response.ResponseMessage = "Unsufficient balance";
             response.ResponseCode = "400";
+            return response;
         };
 
-
-        _context.Transactions.Add(transaction);
-        await _context.SaveChangesAsync();
-
-        // Created = 0
-        // Pending = 1
-        // Success = 2
-        // Failed = 3
-
-
-        UserBalanceForCreation userBalanceForCreation = new UserBalanceForCreation
+        using var trx = _context.Database.BeginTransaction();
+        try
         {
-            UserId = transaction.UserId,
-            TransactionId = transaction.Id,
-            TransactionType = 1,
-            Amount = transaction.Amount,
-            CreatedAt = transaction.CreatedAt,
-            UpdatedAt = transaction.UpdatedAt,
-        };
+            _context.Transactions.Add(transaction);
+            await _context.SaveChangesAsync();
 
-        if (transaction.Status == 1)
-        {
-            userBalanceForCreation.TransactionType = 1;
+            // Created = 0
+            // Pending = 1
+            // Success = 2
+            // Failed = 3
+
+
+            UserBalanceForCreation userBalanceForCreation = new UserBalanceForCreation
+            {
+                UserId = transaction.UserId,
+                TransactionId = transaction.Id,
+                TransactionType = 1,
+                Amount = transaction.Amount,
+                CreatedAt = transaction.CreatedAt,
+                UpdatedAt = transaction.UpdatedAt,
+            };
+
+            if (transaction.Status == 1)
+            {
+                userBalanceForCreation.TransactionType = 1;
+            }
+            else if (transaction.Status == 2)
+            {
+                userBalanceForCreation.TransactionType = 2;
+            }
+            else if (transaction.Status == 3)
+            {
+                userBalanceForCreation.TransactionType = 3;
+            }
+
+            string userBalanceForCreationByte = JsonSerializer.Serialize(userBalanceForCreation);
+            await PushToKafkaAsync(userBalanceForCreationByte);
+
+            trx.Commit();
         }
-        else if (transaction.Status == 2)
+        catch (Exception ex)
         {
-            userBalanceForCreation.TransactionType = 2;
-        }
-        else if (transaction.Status == 3)
-        {
-            userBalanceForCreation.TransactionType = 3;
+            Console.WriteLine(ex.Message);
         }
 
-        string userBalanceForCreationByte = JsonSerializer.Serialize(userBalanceForCreation);
-        await PushToKafkaAsync(userBalanceForCreationByte);
+
+
+
 
         TransactionDTO transactionDTO = new TransactionDTO
         {

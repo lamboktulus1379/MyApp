@@ -17,6 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="serilog" Version="3.0.2-dev-02044" />
   </ItemGroup>
 
   <ItemGroup>

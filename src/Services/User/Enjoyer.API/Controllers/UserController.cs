@@ -7,9 +7,12 @@ using AutoMapper;
 using Enjoyer.Core.DataTransferObjects;
 using Enjoyer.Core.Interfaces;
 using Enjoyer.Core.Models;
+using Enjoyer.Usecase.UserUsecase;
+using Google.Apis.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Enjoyer.API.Controllers
 {
@@ -22,9 +25,10 @@ namespace Enjoyer.API.Controllers
         private readonly IApplicationRoleRepository _roleService;
         private readonly UserManager<User> _userManager;
         private IMapper _mapper;
-        private readonly ILoggerManager _logger;
+        private readonly ILogger<UserController> _logger;
+        private readonly IUserUsecase _userUsecase;
 
-        public UserController(IApplicationUserRepository service, IApplicationRoleRepository roleService, IMapper mapper, UserManager<User> userManager, IUserRepository userService, ILoggerManager logger)
+        public UserController(IApplicationUserRepository service, IApplicationRoleRepository roleService, IMapper mapper, UserManager<User> userManager, IUserRepository userService, ILogger<UserController> logger, IUserUsecase userUsecase)
         {
             _applicationUserService = service;
             _roleService = roleService;
@@ -32,6 +36,7 @@ namespace Enjoyer.API.Controllers
             _userManager = userManager;
             _userService = userService;
             _logger = logger;
+            _userUsecase = userUsecase;
         }
 
         [HttpGet("/all")]
@@ -39,10 +44,10 @@ namespace Enjoyer.API.Controllers
         [Authorize(Roles = "Administrator,User")]
         public ActionResult<IEnumerable<ApplicationUser>> GetAppicationUsers()
         {
-            _logger.LogInfo("GetAppicationUsers");
+            _logger.LogInformation("GetAppicationUsers");
             var applicationUsers = _applicationUserService.GetApplicationUsers();
 
-            _logger.LogInfo(applicationUsers.ToString());
+            _logger.LogInformation(applicationUsers.ToString());
             return Ok(applicationUsers);
         }
 
@@ -148,20 +153,33 @@ namespace Enjoyer.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            _logger.LogInfo("GetUsers");
+            _logger.LogInformation("GetUsers");
             var users = await _userService.GetUsers();
 
             var usersDTO = _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
             string usersDTOString = JsonSerializer.Serialize(usersDTO);
-            _logger.LogInfo(usersDTOString);
+            _logger.LogInformation(usersDTOString);
             return Ok(usersDTO);
         }
 
         [HttpPost("validate-user")]
         public ActionResult ValidateUser([FromBody] ValidateUser validateUser)
         {
-            _logger.LogInfo($"ValidateUser: {validateUser}");
+            _logger.LogInformation($"ValidateUser: {validateUser}");
             return Ok(validateUser);
+        }
+
+        [HttpPut("balance")]
+        public ActionResult UpdateBalance([FromBody] UserBalanceForCreation userBalanceForCreation)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            _userUsecase.UpdateBalance(userBalanceForCreation);
+
+            return NoContent();
         }
     }
 }

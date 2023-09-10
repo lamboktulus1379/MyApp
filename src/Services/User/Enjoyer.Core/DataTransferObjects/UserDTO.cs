@@ -14,6 +14,8 @@ namespace Enjoyer.Core.DataTransferObjects
         public string NormalizedUserName { get; set; }
         public string CreatedAt { get; set; }
 
+        public double Balance { get; set; }
+
         public IEnumerable<Role> Roles { get; set; }
 
         public UserDto()

@@ -30,17 +30,6 @@ namespace Enjoyer.API
                 configuration.Enrich.FromLogContext()
                 .Enrich.WithMachineName()
                 .WriteTo.Console()
-                //.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(context.Configuration["ElasticConfiguration:Uri"]))
-                //{
-                //    AutoRegisterTemplate = true,
-                //    IndexFormat = $"{context.Configuration["ApplicationName"]}-logs-{context.HostingEnvironment.EnvironmentName.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
-                //    NumberOfShards = 2,
-                //    NumberOfReplicas = 1,
-                //    ModifyConnectionSettings = x => x.BasicAuthentication(context.Configuration["ElasticConfiguration:Username"], context.Configuration["ElasticConfiguration:Password"]),
-                //    MinimumLogEventLevel = Serilog.Events.LogEventLevel.Information,
-                //    TypeName = null,
-                //    BatchAction = ElasticOpType.Create
-                //})
                 .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
                 .ReadFrom.Configuration(context.Configuration)
                 //.Filter.ByExcluding(Matching.WithProperty<string>("RequestPath", v => "/".Equals(v, StringComparison.OrdinalIgnoreCase)))
