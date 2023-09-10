@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Transaction.Core.Contracts;
 using Transaction.Infrastructure.Data;
+using Transaction.Infrastructure.Host;
+using Transaction.Infrastructure.UserClient;
 using Transaction.Usecase.TransactionUsecase;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ITransactionUsecase, TransactionUsecase>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddTransient<IHttpHost, HttpHost>();
+builder.Services.AddTransient<IUserClient, UserClient>();
 
 var app = builder.Build();
 

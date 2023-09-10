@@ -1,8 +1,10 @@
 using System.Text.Json;
 using AutoMapper;
+using Azure;
 using EventBusKafka;
 using Transaction.Core.DataTransferObjects;
 using Transaction.Infrastructure.Data;
+using Transaction.Infrastructure.UserClient;
 
 namespace Transaction.Usecase.TransactionUsecase;
 
@@ -12,14 +14,30 @@ public class TransactionUsecase : ITransactionUsecase
 {
     private readonly RepositoryContext _context;
     private readonly IMapper _mapper;
+    private readonly IUserClient _userClient;
 
-    public TransactionUsecase(RepositoryContext context, IMapper mapper)
+    public TransactionUsecase(RepositoryContext context, IMapper mapper, IUserClient userClient)
     {
         _context = context;
         _mapper = mapper;
+        _userClient = userClient;
     }
-    public async Task<TransactionDTO> DoTransaction(Core.TransactionAggregate.Transaction transaction)
+    public async Task<Res> DoTransaction(Core.TransactionAggregate.Transaction transaction)
     {
+        var user = await _userClient.GetUser(transaction.UserId);
+        var response = new Res
+        {
+            ResponseMessage = "OK",
+            ResponseCode = "200",
+        };
+
+        if (user.Balance < transaction.Amount)
+        {
+            response.ResponseMessage = "Unsufficient balance";
+            response.ResponseCode = "400";
+        };
+
+
         _context.Transactions.Add(transaction);
         await _context.SaveChangesAsync();
 
@@ -65,7 +83,7 @@ public class TransactionUsecase : ITransactionUsecase
         };
 
 
-        return transactionDTO;
+        return response;
     }
 
     private async Task PushToKafkaAsync(string message)

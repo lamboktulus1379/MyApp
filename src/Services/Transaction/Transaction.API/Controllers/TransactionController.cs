@@ -38,12 +38,11 @@ public class TransactionController : ControllerBase
             Status = 0,
         };
 
-        var response = _transactionUsecase.DoTransaction(transaction);
+        var response = await _transactionUsecase.DoTransaction(transaction);
+        transactionDTO = TransactionToDTO(transaction);
+        response.Data = transactionDTO;
 
-        return CreatedAtAction(
-            nameof(GetTransaction),
-            new { id = transaction.Id },
-            TransactionToDTO(transaction));
+        return Ok(response);
     }
 
     // GET: api/Transactions/5
