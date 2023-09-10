@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["Services/Wallet/Wallet.API/Wallet.API.csproj", "Services/Wallet/Wallet.API/"]
 RUN dotnet restore "Services/Wallet/Wallet.API/Wallet.API.csproj"
 COPY . .
-WORKDIR "/src/Services/User/Wallet.API"
+WORKDIR "/src/Services/Wallet/Wallet.API"
 RUN dotnet build "Wallet.API.csproj" -c Release -o /app/build
 
 FROM build AS publish

@@ -32,7 +32,7 @@ namespace Enjoyer.API
                 .WriteTo.Console()
                 .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
                 .ReadFrom.Configuration(context.Configuration)
-                //.Filter.ByExcluding(Matching.WithProperty<string>("RequestPath", v => "/".Equals(v, StringComparison.OrdinalIgnoreCase)))
+                .Filter.ByExcluding(Matching.WithProperty<string>("RequestPath", v => "/".Equals(v, StringComparison.OrdinalIgnoreCase)))
                 ;
             })
                 .ConfigureWebHostDefaults(webBuilder =>
