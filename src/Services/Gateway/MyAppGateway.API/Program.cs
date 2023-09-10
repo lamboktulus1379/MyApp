@@ -3,7 +3,10 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile(Path.Combine("Configurations", "Users", "configuration.json")).AddEnvironmentVariables();
+builder.Configuration
+.AddJsonFile(Path.Combine("Configurations", "Users", "configuration.json"))
+.AddJsonFile(Path.Combine("Configurations", "Transactions", "configuration.json"))
+.AddEnvironmentVariables();
 
 // Add services to the container.
 

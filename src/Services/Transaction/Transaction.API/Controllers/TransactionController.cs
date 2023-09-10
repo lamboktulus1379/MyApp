@@ -5,7 +5,7 @@ using Transaction.Usecase.TransactionUsecase;
 
 namespace Transaction.API;
 
-[Route("api/[controller]")]
+[Route("api/transactions")]
 [ApiController]
 public class TransactionController : ControllerBase
 {
