@@ -14,8 +14,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddOcelot();
+builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+// builder.Services.AddOcelot();
 var app = builder.Build();
+app.MapReverseProxy();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,6 +33,6 @@ app.UseRequestCulture();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseOcelot().Wait();
+// app.UseOcelot().Wait();
 
 app.Run();
