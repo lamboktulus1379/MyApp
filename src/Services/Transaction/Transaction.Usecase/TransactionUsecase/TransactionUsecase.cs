@@ -2,6 +2,7 @@ using System.Text.Json;
 using AutoMapper;
 using Azure;
 using EventBusKafka;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Transaction.Core.DataTransferObjects;
 using Transaction.Infrastructure.Data;
@@ -105,8 +106,30 @@ public class TransactionUsecase : ITransactionUsecase
         return response;
     }
 
+    public async Task<Res> GetTransactions()
+    {
+        var response = new Res { ResponseCode = "200", ResponseMessage = "Success" };
+        var transactions = await _context.Transactions
+        .Select(x => TransactionToDTO(x))
+                .ToListAsync();
+
+        response.Data = transactions;
+
+        return response;
+    }
+
     private async Task PushToKafkaAsync(string message)
     {
         await Producer.Produce(message);
     }
+
+    private static TransactionDTO TransactionToDTO(Transaction.Core.TransactionAggregate.Transaction transaction) =>
+       new TransactionDTO
+       {
+           Amount = transaction.Amount,
+           Currency = transaction.Currency,
+           PaymentMethod = transaction.PaymentMethod,
+           SupplierId = transaction.SupplierId,
+           UserId = transaction.UserId,
+       };
 }

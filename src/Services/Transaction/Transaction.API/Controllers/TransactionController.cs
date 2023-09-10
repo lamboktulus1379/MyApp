@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Transaction.Core.DataTransferObjects;
 using Transaction.Infrastructure.Data;
 using Transaction.Usecase.TransactionUsecase;
@@ -43,6 +44,13 @@ public class TransactionController : ControllerBase
         response.Data = transactionDTO;
 
         return Ok(response);
+    }
+
+    // GET: api/Transactions
+    [HttpGet]
+    public async Task<ActionResult<Res>> GetTransactions()
+    {
+        return await _transactionUsecase.GetTransactions();
     }
 
     // GET: api/Transactions/5
