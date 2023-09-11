@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Enjoyer.Core.DataTransferObjects;
 
 namespace Enjoyer.API.Controllers
 {
@@ -67,6 +68,11 @@ namespace Enjoyer.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<User> GetUser(string id)
         {
+            var response = new Res
+            {
+                ResponseMessage = "OK",
+                ResponseCode = "200",
+            };
             var user = _userService.GetById(id);
 
             if (user == null)
@@ -79,7 +85,9 @@ namespace Enjoyer.API.Controllers
                 userDto.Email = userDto.UserName;
             }
 
-            return Ok(userDto);
+
+            response.Data = userDto;
+            return Ok(response);
         }
 
         [HttpGet("email/{email}")]
@@ -153,13 +161,22 @@ namespace Enjoyer.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
+            var response = new Res
+            {
+                ResponseMessage = "OK",
+                ResponseCode = "200",
+            };
+
             _logger.LogInformation("GetUsers");
             var users = await _userService.GetUsers();
 
             var usersDTO = _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
             string usersDTOString = JsonSerializer.Serialize(usersDTO);
             _logger.LogInformation(usersDTOString);
-            return Ok(usersDTO);
+
+            response.Data = usersDTO;
+            return Ok(response
+            );
         }
 
         [HttpPost("validate-user")]
