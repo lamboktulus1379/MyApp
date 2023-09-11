@@ -1,3 +1,4 @@
+using Enjoyer.API.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Wallet.API;
 using Wallet.Infrastructure.Data;
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<WalletContext>(options => options.UseSqlServer(bui
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 builder.Services.AddHostedService<BackgroundKafka>();
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 
 var app = builder.Build();
@@ -36,6 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
