@@ -1,9 +1,9 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/nightly/aspnet:8.0-preview AS base
+FROM mcr.microsoft.com/dotnet/nightly/aspnet:7.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/nightly/sdk:8.0-preview AS build
+FROM mcr.microsoft.com/dotnet/nightly/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Services/Transaction/Transaction.API/Transaction.API.csproj", "Services/Transaction/Transaction.API/"]
 COPY ["Services/Transaction/Transaction.Core/Transaction.Core.csproj", "Services/Transaction/Transaction.Core/"]

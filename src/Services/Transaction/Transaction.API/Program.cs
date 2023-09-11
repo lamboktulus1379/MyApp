@@ -7,6 +7,7 @@ using Transaction.Usecase.TransactionUsecase;
 using Serilog;
 using Serilog.Filters;
 using Transaction.Infrastructure.Logger;
+using Enjoyer.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) =>
@@ -46,6 +47,7 @@ builder.Services.AddTransient<ITransactionUsecase, TransactionUsecase>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient<IHttpHost, HttpHost>();
 builder.Services.AddTransient<IUserClient, UserClient>();
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -65,6 +67,8 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
