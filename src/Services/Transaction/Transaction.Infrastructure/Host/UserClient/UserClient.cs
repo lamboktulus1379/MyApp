@@ -4,6 +4,7 @@ using Transaction.Infrastructure.Host.UserClient.Models;
 using Newtonsoft.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Transaction.Core.DataTransferObjects;
 
 
 namespace Transaction.Infrastructure.UserClient;
@@ -50,8 +51,8 @@ public class UserClient : IUserClient
 
         _logger.LogInformation($"User {content}");
 
-        var userResponse = JsonConvert.DeserializeObject<UserCTO>(content);
+        var userResponse = JsonConvert.DeserializeObject<ResCTO>(content);
 
-        return userResponse;
+        return userResponse.Data;
     }
 }

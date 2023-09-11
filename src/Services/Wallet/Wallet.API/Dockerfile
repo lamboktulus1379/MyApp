@@ -7,7 +7,6 @@ FROM mcr.microsoft.com/dotnet/nightly/sdk:8.0-preview AS build
 WORKDIR /src
 COPY ["Services/Wallet/Wallet.API/Wallet.API.csproj", "Services/Wallet/Wallet.API/"]
 COPY ["Services/Wallet/Wallet.Core/Wallet.Core.csproj", "Services/Wallet/Wallet.Core/"]
-COPY ["Services/Wallet/Wallet.Usecase/Wallet.Usecase.csproj", "Services/Wallet/Wallet.Usecase/"]
 COPY ["Services/Wallet/Wallet.Infrastructure/Wallet.Infrastructure.csproj", "Services/Wallet/Wallet.Infrastructure/"]
 RUN dotnet restore "Services/Wallet/Wallet.API/Wallet.API.csproj"
 COPY . .
