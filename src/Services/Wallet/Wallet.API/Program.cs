@@ -5,13 +5,6 @@ using Wallet.Infrastructure.LoggerService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Host.CreateDefaultBuilder(args).ConfigureServices(services =>
-// {
-//     services.AddHostedService<BackgroundKafka>();
-// });
-
-// Add services to the container.
-
 builder.Services.AddControllers().AddJsonOptions(options =>
            {
                options.JsonSerializerOptions.PropertyNamingPolicy = null;
@@ -26,6 +19,12 @@ builder.Services.AddHostedService<BackgroundKafka>();
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<WalletContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
