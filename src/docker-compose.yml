@@ -1,6 +1,19 @@
-version: '3.8'
-
 services:
+  auth-api:
+    image: auth-api
+    build:
+      context: .
+      dockerfile: Services/Auth/Auth.API/Dockerfile
+    ports:
+      - "5002:80"
+      - "2005:443"
+    environment:
+      - Logging__Console__FormatterName=""
+    volumes:
+      - ./server:/app
+      - /app/obj/
+      - /app/bin/
+      - /app/out/
   wallet-api:
     image: wallet-api
     build:
@@ -31,11 +44,11 @@ services:
       - /app/obj/
       - /app/bin/
       - /app/out/
-  score-api:
-    image: score-api
+  transaction-api:
+    image: transaction-api
     build:
       context: .
-      dockerfile: Services/Score/Score.API/Dockerfile
+      dockerfile: Services/Transaction/Transaction.API/Dockerfile
     ports:
       - "5003:80"
       - "5030:443"

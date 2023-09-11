@@ -1,6 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using MyAppGateway.API.Middleware;
-using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -16,6 +17,30 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 // builder.Services.AddOcelot();
+builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = builder.Configuration["ValidIssuer"],
+                    ValidAudience = builder.Configuration["ValidAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecurityKey"]))
+                };
+            });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("customPolicy", policy =>
+        policy.RequireAuthenticatedUser());
+});
+
 var app = builder.Build();
 app.MapReverseProxy();
 
@@ -30,6 +55,7 @@ app.UseHttpsRedirection();
 
 app.UseRequestCulture();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

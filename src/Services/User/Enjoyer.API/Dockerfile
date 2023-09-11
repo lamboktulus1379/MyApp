@@ -6,6 +6,10 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/nightly/sdk:8.0-preview AS build
 WORKDIR /src
 COPY ["Services/User/Enjoyer.API/Enjoyer.API.csproj", "Services/User/Enjoyer.API/"]
+COPY ["Services/User/Enjoyer.Core/Enjoyer.Core.csproj", "Services/User/Enjoyer.Core/"]
+COPY ["Services/User/Enjoyer.Usecase/Enjoyer.Usecase.csproj", "Services/User/Enjoyer.Usecase/"]
+COPY ["Services/User/Enjoyer.Infrastructure/Enjoyer.Infrastructure.csproj", "Services/User/Enjoyer.Infrastructure/"]
+COPY ["Services/User/TokenService/TokenService.csproj", "Services/User/Token.Service/"]
 RUN dotnet restore "Services/User/Enjoyer.API/Enjoyer.API.csproj"
 COPY . .
 WORKDIR "/src/Services/User/Enjoyer.API"
