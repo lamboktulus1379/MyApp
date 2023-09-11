@@ -201,3 +201,13 @@ curl --location 'https://localhost:7133/api/transactions' \
     ]
 }
 ```
+
+Note:
+Need to update environment variable when running service:
+```
+export KAFKA_BROKER=pkc-4j8dq.southeastasia.azure.confluent.cloud:9092
+export KAFKA_USERNAME=KLOVXE4G4V5PTAHF
+export KAFKA_PASSWORD=UOvNpd4S502mvTb5C2qkEd87WvqDzzOP0lApZGLdbGH7FjgXD4a3eXDXRKOql+fc
+export KAFKA_TOPIC=topic_0
+export KAFKA_CONSUMER_GROUP=gra
+```
