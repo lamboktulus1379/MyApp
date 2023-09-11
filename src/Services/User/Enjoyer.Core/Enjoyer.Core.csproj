@@ -9,7 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Google.Apis.Auth" Version="1.62.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0-preview.7.23375.9" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.3" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.0" />
     </ItemGroup>
 
 </Project>
