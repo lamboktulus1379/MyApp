@@ -158,7 +158,7 @@ curl --location 'https://localhost:7133/api/users/d467706d-929a-49d5-9bbf-8dfee1
         "NormalizedUserName": "TEST22@GMAIL.COM",
         "CreatedAt": "9/11/2023 11:51:24 AM",
         "Balance": 0,
-        "Roles": []
+        "Roles": ["Viewer"]
     }
 }
 ```
