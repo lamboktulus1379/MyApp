@@ -7,6 +7,7 @@ using Auth.Core.Services;
 using Auth.Infrastructure;
 using Auth.Infrastructure.Data;
 using Auth.Usecase.UserUsecase;
+using Enjoyer.API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -97,6 +98,7 @@ namespace Auth.API
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
             services.AddScoped<IApplicationRoleRepository, ApplicationRoleRepository>();
+            services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
             services.AddSwaggerGen(c =>
             {
@@ -131,6 +133,8 @@ namespace Auth.API
             });
 
             app.UseRouting();
+
+            app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
             app.UseCors("CorsPolicy");
 
