@@ -13,7 +13,7 @@ namespace Auth.Core.Models
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpiry { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public double Balance { get; set; }
         public ICollection<Role> Roles { get; set; }
     }

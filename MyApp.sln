@@ -41,7 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{3F600ED9-29F7-4B7E-84CD-AE2E4EB3D6BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusKafka", "BuildingBlocks\EventBus\EventBusKafka\EventBusKafka.csproj", "{FD10DB62-7570-482C-9F60-26988E7B0045}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusKafka", "src\BuildingBlocks\EventBus\EventBusKafka\EventBusKafka.csproj", "{FD10DB62-7570-482C-9F60-26988E7B0045}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enjoyer.Usecase", "src\Services\User\Enjoyer.Usecase\Enjoyer.Usecase.csproj", "{5213F466-2DC7-4EF3-AA42-78811C984CCA}"
 EndProject

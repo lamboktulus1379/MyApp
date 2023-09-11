@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using AutoMapper;
-using EventBusKafka;
 using Wallet.Infrastructure.LoggerService;
 using Wallet.Core.DataTransferObjects;
 using Wallet.Core.Models;
 using Wallet.Infrastructure.Data;
+using EventBusKafka;
 
 namespace Wallet.API
 {

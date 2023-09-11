@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Transaction.Core\Transaction.Core.csproj" />
     <ProjectReference Include="..\Transaction.Infrastructure\Transaction.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\..\BuildingBlocks\EventBus\EventBusKafka\EventBusKafka.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBusKafka\EventBusKafka.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,9 +6,10 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/nightly/sdk:8.0-preview AS build
 WORKDIR /src
 COPY ["Services/Transaction/Transaction.API/Transaction.API.csproj", "Services/Transaction/Transaction.API/"]
-COPY ["Services/Transactions/Transactions.Core/Transactions.Core.csproj", "Services/Transactions/Transactions.Core/"]
-COPY ["Services/Transactions/Transactions.Usecase/Transactions.Usecase.csproj", "Services/Transactions/Transactions.Usecase/"]
-COPY ["Services/Transactions/Transactions.Infrastructure/Transactions.Infrastructure.csproj", "Services/Transactions/Transactions.Infrastructure/"]
+COPY ["Services/Transaction/Transaction.Core/Transaction.Core.csproj", "Services/Transaction/Transaction.Core/"]
+COPY ["Services/Transaction/Transaction.Usecase/Transaction.Usecase.csproj", "Services/Transaction/Transaction.Usecase/"]
+COPY ["Services/Transaction/Transaction.Infrastructure/Transaction.Infrastructure.csproj", "Services/Transaction/Transaction.Infrastructure/"]
+COPY ["BuildingBlocks/EventBus/EventBusKafka/EventBusKafka.csproj", "BuildingBlocks/EventBus/EventBusKafka/"]
 RUN dotnet restore "Services/Transaction/Transaction.API/Transaction.API.csproj"
 COPY . .
 WORKDIR "/src/Services/Transaction/Transaction.API"

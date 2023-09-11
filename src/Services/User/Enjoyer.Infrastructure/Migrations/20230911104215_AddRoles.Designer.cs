@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Enjoyer.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationUserContext))]
-    [Migration("20230906160424_AddedBalanceToUser")]
-    partial class AddedBalanceToUser
+    [Migration("20230911104215_AddRoles")]
+    partial class AddRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,19 +25,43 @@ namespace Enjoyer.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ApplicationUserRole", b =>
+            modelBuilder.Entity("ApplicationRoleApplicationUser", b =>
                 {
+                    b.Property<Guid>("ApplicationRolesId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ApplicationUsersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RolesId")
+                    b.HasKey("ApplicationRolesId", "ApplicationUsersId");
+
+                    b.HasIndex("ApplicationUsersId");
+
+                    b.ToTable("ApplicationRoleApplicationUser");
+                });
+
+            modelBuilder.Entity("Enjoyer.Core.Models.ApplicationRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ApplicationUsersId", "RolesId");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("RolesId");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("ApplicationUserRole");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationRoles");
                 });
 
             modelBuilder.Entity("Enjoyer.Core.Models.ApplicationUser", b =>
@@ -80,30 +104,6 @@ namespace Enjoyer.Infrastructure.Migrations
                     b.ToTable("ApplicationUsers");
                 });
 
-            modelBuilder.Entity("Enjoyer.Core.Models.Role", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -112,6 +112,11 @@ namespace Enjoyer.Infrastructure.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -130,16 +135,20 @@ namespace Enjoyer.Infrastructure.Migrations
 
                     b.ToTable("AspNetRoles", (string)null);
 
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
+
+                    b.UseTphMappingStrategy();
+
                     b.HasData(
                         new
                         {
-                            Id = "19931458-b4f8-4202-b0ef-dc9c30681178",
+                            Id = "441b4c2f-6e54-4ce1-b366-168254dcec8a",
                             Name = "Viewer",
                             NormalizedName = "VIEWER"
                         },
                         new
                         {
-                            Id = "f2a772ab-60c4-4efb-b566-24434be36d68",
+                            Id = "530457a1-8f84-4bce-8dd6-30ae57da1e9a",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -325,6 +334,22 @@ namespace Enjoyer.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Enjoyer.Core.Models.Role", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasDiscriminator().HasValue("Role");
+                });
+
             modelBuilder.Entity("Enjoyer.Core.Models.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -360,17 +385,17 @@ namespace Enjoyer.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("ApplicationUserRole", b =>
+            modelBuilder.Entity("ApplicationRoleApplicationUser", b =>
                 {
-                    b.HasOne("Enjoyer.Core.Models.ApplicationUser", null)
+                    b.HasOne("Enjoyer.Core.Models.ApplicationRole", null)
                         .WithMany()
-                        .HasForeignKey("ApplicationUsersId")
+                        .HasForeignKey("ApplicationRolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Enjoyer.Core.Models.Role", null)
+                    b.HasOne("Enjoyer.Core.Models.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("RolesId")
+                        .HasForeignKey("ApplicationUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

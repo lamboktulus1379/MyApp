@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -8,12 +9,10 @@ using Enjoyer.Core.DataTransferObjects;
 using Enjoyer.Core.Interfaces;
 using Enjoyer.Core.Models;
 using Enjoyer.Usecase.UserUsecase;
-using Google.Apis.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Enjoyer.Core.DataTransferObjects;
 
 namespace Enjoyer.API.Controllers
 {
@@ -84,7 +83,7 @@ namespace Enjoyer.API.Controllers
             {
                 userDto.Email = userDto.UserName;
             }
-
+            userDto.Roles = _userManager.GetRolesAsync(user).Result.ToList();
 
             response.Data = userDto;
             return Ok(response);
@@ -170,11 +169,10 @@ namespace Enjoyer.API.Controllers
             _logger.LogInformation("GetUsers");
             var users = await _userService.GetUsers();
 
-            var usersDTO = _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
-            string usersDTOString = JsonSerializer.Serialize(usersDTO);
-            _logger.LogInformation(usersDTOString);
+            string userstring = JsonSerializer.Serialize(users);
+            _logger.LogInformation(userstring);
 
-            response.Data = usersDTO;
+            response.Data = users;
             return Ok(response
             );
         }

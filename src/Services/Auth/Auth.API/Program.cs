@@ -16,8 +16,6 @@ namespace Auth.API
             var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationUserContext>();
-                db.Database.Migrate();
             }
 
             host.Run();

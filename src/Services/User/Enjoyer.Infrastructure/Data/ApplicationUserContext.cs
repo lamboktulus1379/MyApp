@@ -18,7 +18,6 @@ namespace Enjoyer.Infrastructure.Data
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

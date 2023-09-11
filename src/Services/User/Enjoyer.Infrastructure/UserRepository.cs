@@ -1,6 +1,9 @@
-﻿using Enjoyer.Core.Interfaces;
+﻿using System.Security.Claims;
+using Enjoyer.Core.DataTransferObjects;
+using Enjoyer.Core.Interfaces;
 using Enjoyer.Core.Models;
 using Enjoyer.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enjoyer.Infrastructure
@@ -8,10 +11,12 @@ namespace Enjoyer.Infrastructure
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationUserContext _applicationUserContext;
+        private readonly UserManager<User> _userManager;
 
-        public UserRepository(ApplicationUserContext applicationUserContext)
+        public UserRepository(ApplicationUserContext applicationUserContext, UserManager<User> userManager)
         {
             _applicationUserContext = applicationUserContext;
+            _userManager = userManager;
         }
         public User Add(User newUser)
         {
@@ -34,15 +39,26 @@ namespace Enjoyer.Infrastructure
             return _applicationUserContext.Users.Where(applicationUser => applicationUser.Email.Equals(email)).FirstOrDefault();
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<UserDto>> GetUsers()
         {
-            return await _applicationUserContext.Users
-            .ToListAsync();
+            return _userManager.Users.Select(c => new UserDto()
+            {
+                Id = c.Id,
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                Gender = c.Gender,
+                Balance = c.Balance,
+                UserName = c.UserName.ToString(),
+                Email = c.UserName.ToString(),
+                Roles = _userManager.GetRolesAsync(c).Result.ToList()!,
+            }).ToList();
         }
 
         public User GetById(string Id)
         {
-            return _applicationUserContext.Users.Where(applicationUser => applicationUser.Id.Equals(Id)).FirstOrDefault();
+            var user = _applicationUserContext.Users.Where(applicationUser => applicationUser.Id.Equals(Id)).FirstOrDefault();
+
+            return user;
         }
 
         public User Update(string Id, User newUser)

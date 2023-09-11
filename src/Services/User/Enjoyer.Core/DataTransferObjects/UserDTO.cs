@@ -10,13 +10,11 @@ namespace Enjoyer.Core.DataTransferObjects
         public string Email { get; set; }
         public string UserName { get; set; }
         public string Gender { get; set; }
-        public string NormalizedEmail { get; set; }
-        public string NormalizedUserName { get; set; }
-        public string CreatedAt { get; set; }
-
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public double Balance { get; set; }
 
-        public IEnumerable<Role> Roles { get; set; }
+        public List<string> Roles { get; set; }
 
         public UserDto()
         {
