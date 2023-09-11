@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Enjoyer.API.Middlewares;
 using Enjoyer.Core.Interfaces;
 using Enjoyer.Core.Models;
 using Enjoyer.Core.Services;
@@ -107,6 +108,7 @@ namespace Enjoyer.API
             services.AddTransient<IHashing, HashingService>();
             services.AddSingleton<ILoggerManager, LoggerManager>();
             services.AddScoped<IUserUsecase, UserUsecase>();
+            services.AddTransient<GlobalExceptionHandlingMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -137,6 +139,8 @@ namespace Enjoyer.API
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
